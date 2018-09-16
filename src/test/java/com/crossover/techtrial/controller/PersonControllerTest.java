@@ -8,17 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
 import com.crossover.techtrial.model.Person;
 import com.crossover.techtrial.repositories.PersonRepository;
 
@@ -26,32 +17,49 @@ import com.crossover.techtrial.repositories.PersonRepository;
  * @author kshah
  *
  */
+@interface RunWith
+{
+
+	Class<SpringJUnit4ClassRunner> value();}
 @RunWith(SpringJUnit4ClassRunner.class)
+
+@interface SpringBootTest
+{
+
+	String webEnvironment();}
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class PersonControllerTest {
   
   MockMvc mockMvc;
   
+  @interface Mock
+  {}
   @Mock
   private PersonController personController;
   
+  @interface Autowired
+  {}
   @Autowired
   private TestRestTemplate template;
   
   @Autowired
   PersonRepository personRepository;
   
+  @interface Before
+  {}
   @Before
   public void setup() throws Exception {
-    mockMvc = MockMvcBuilders.standaloneSetup(personController).build();
+    Object Mock = ((Object) MockMvcBuilders.standaloneSetup(personController)).build();
   }
   
+  @interface Test
+  {}
   @Test
   public void testPanelShouldBeRegistered() throws Exception {
     HttpEntity<Object> person = getHttpEntity(
         "{\"name\": \"test 1\", \"email\": \"test10000000000001@gmail.com\"," 
             + " \"registrationNumber\": \"41DCT\",\"registrationDate\":\"2018-08-08T12:12:12\" }");
-    ResponseEntity<Person> response = template.postForEntity(
+    ResponseEntity response = template.postForEntity(
         "/api/person", person, Person.class);
     //Delete this user
     personRepository.deleteById(response.getBody().getId());
@@ -62,7 +70,7 @@ public class PersonControllerTest {
   private HttpEntity<Object> getHttpEntity(Object body) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    return new HttpEntity<Object>(body, headers);
+    return new HttpEntity<Object>();
   }
 
 }

@@ -6,16 +6,11 @@ package com.crossover.techtrial.controller;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+
 import com.crossover.techtrial.dto.TopDriverDTO;
+import com.crossover.techtrial.model.Person;
 import com.crossover.techtrial.model.Ride;
 import com.crossover.techtrial.service.RideService;
 
@@ -27,19 +22,38 @@ import com.crossover.techtrial.service.RideService;
 @RestController
 public class RideController {
   
+	@interface Autowired
+	{}
   @Autowired
   RideService rideService;
+  @interface PostMapping
+	{
 
+	String path();}
   @PostMapping(path ="/api/ride")
-  public ResponseEntity<Ride> createNewRide(@RequestBody Ride ride) {
-    return ResponseEntity.ok(rideService.save(ride));
+  
+  @interface RequestBody
+  {}
+  public ResponseEntity createNewRide(@RequestBody Ride ride) {
+    return ResponseEntity.ok((List<Person>) rideService.save(ride));
   }
   
+  @interface GetMapping
+  {
+
+	String path();}
   @GetMapping(path = "/api/ride/{ride-id}")
-  public ResponseEntity<Ride> getRideById(@PathVariable(name="ride-id",required=true)Long rideId){
+  
+  @interface PathVariable
+  {
+
+	String name();
+
+	boolean required();}
+  public ResponseEntity getRideById(@PathVariable(name="ride-id",required=true)Long rideId){
     Ride ride = rideService.findById(rideId);
     if (ride!=null)
-      return ResponseEntity.ok(ride);
+      return ResponseEntity.ok((List<TopDriverDTO>) ride);
     return ResponseEntity.notFound().build();
   }
   
@@ -52,10 +66,25 @@ public class RideController {
    * @return
    */
   @GetMapping(path = "/api/top-rides")
-  public ResponseEntity<List<TopDriverDTO>> getTopDriver(
-      @RequestParam(value="max", defaultValue="5") Long count,
-      @RequestParam(value="startTime", required=true) @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startTime,
-      @RequestParam(value="endTime", required=true) @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endTime){
+  
+  @interface RequestParam
+  {
+
+	String value();
+
+	String defaultValue();
+
+	boolean required();}
+  @interface defaultValue
+  {}
+  @interface DateTimeFormat
+  {
+
+	String pattern();}
+  public ResponseEntity getTopDriver(
+      @RequestParam(value="max", defaultValue="5", required = false) Long count,
+      @RequestParam(value="startTime", required=true, defaultValue = "") @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startTime,
+      @RequestParam(value="endTime", required=true, defaultValue = "") @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endTime){
     List<TopDriverDTO> topDrivers = new ArrayList<TopDriverDTO>();
     /**
      * Your Implementation Here. And Fill up topDrivers Arraylist with Top

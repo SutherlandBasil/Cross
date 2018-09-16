@@ -5,10 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
+@interface ControllerAdvice
+{}
+
+@interface Component
+{}
 @ControllerAdvice
 @Component
 public class GlobalExceptionHandler {
@@ -18,8 +20,10 @@ public class GlobalExceptionHandler {
   /**
    * Global Exception handler for all exceptions.
    */
+  @interface ExceptionHandler
+  {}
   @ExceptionHandler
-  public ResponseEntity<AbstractMap.SimpleEntry<String, String>> handle(Exception exception) {
+  public ResponseEntity handle(Exception exception) {
     // general exception
     LOG.error("Exception: Unable to process this request. ", exception);
     AbstractMap.SimpleEntry<String, String> response =

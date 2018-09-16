@@ -6,8 +6,6 @@ package com.crossover.techtrial.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.crossover.techtrial.model.Person;
 import com.crossover.techtrial.repositories.PersonRepository;
 
@@ -15,9 +13,13 @@ import com.crossover.techtrial.repositories.PersonRepository;
  * @author crossover
  *
  */
+
+@interface Service
+{}
 @Service
 public class PersonServiceImpl implements PersonService{
 
+	@interface Autowired{}
   @Autowired
   PersonRepository personRepository;
   
